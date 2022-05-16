@@ -1,0 +1,19 @@
+---
+title: "ESM 204 Hw 4"
+author: "Taylor Medina, Matt McCafferty"
+date: '2022-05-16'
+output: html_document
+---
+
+```{r setup, include = TRUE, warning = FALSE, message = FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+
+library(tidyverse)
+library(here)
+```
+
+```{r}
+damages <- read_csv(here('data/damages.csv'))
+warming <- read_csv(here('data/warming.csv'))
+```
+
