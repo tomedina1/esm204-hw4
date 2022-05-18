@@ -69,7 +69,6 @@ p4 <- ggplot(warming_predict) +
   geom_line(aes(x = year, y = new_difference_norm)) +
   theme_minimal()
 
-
 (p1 | p2) / (p3 | p4)
 ```
 
