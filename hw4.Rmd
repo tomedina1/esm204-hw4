@@ -18,7 +18,7 @@ damages <- read_csv(here('data/damages.csv'))
 warming <- read_csv(here('data/warming.csv'))
 ```
 
-## 1
+## Question 1
 
 ```{r}
 # create quadratic model
@@ -44,7 +44,7 @@ The quadratic regression model modeling environmental damages as a function of g
 
 $$ \hat D = 1.941 \times 10^{13} T ^ 2 - 1.060 \times 10^{12} T $$
 
-## 2
+## Question 2
 
 ```{r}
 warming_predict <- warming %>% 
@@ -56,19 +56,19 @@ warming_predict <- warming %>%
 
 p1 <- ggplot(warming_predict) +
   geom_line(aes(x = year, y = damage_np)) +
-  geom_text(aes(2035, 1.8e14, label = 'No Pulse')) +
+  geom_label(aes(2035, 1.8e14, label = 'No Pulse')) +
   labs(y = 'environmental damages ($)') +
   theme_minimal()
 
 p2 <- ggplot(warming_predict) +
   geom_line(aes(x = year, y = damage_wp)) +
-    geom_text(aes(2035, 1.8e14, label = 'Pulse')) +
+  geom_label(aes(2035, 1.8e14, label = 'Pulse')) +
   labs(y = 'environmental damages ($)') +
   theme_minimal()
 
 p3 <- ggplot(warming_predict) +
   geom_line(aes(x = year, y = damages_diff)) +
-    labs(y = 'environmental damage \n difference ($)') +
+  labs(y = 'environmental damage \n difference ($)') +
   theme_minimal()
 
 p4 <- ggplot(warming_predict) +
@@ -81,7 +81,13 @@ p4 <- ggplot(warming_predict) +
 ```
 
 **Figure 2:** Plots of damages from no pulse (top-left), with the 35b ton pulse (top-right), the differences in damages (with pulse - no pulse) (bottom-left), and the normalized differences in damages per ton of carbon (bottom-right.)
-## 3
+
+## Question 3
+
+The present discounted value formula is given as the following:
+
+$$ PV = \sum_{i = 0}^{78}{\frac{D_i}{(1+r)^i}}$$
+This takes into account that 2022 is considered year 0 (i = 0) and 2100 is the final value (i = 78). $D_i$ is the damage associated with the year.
 
 ```{r}
 # function to calculate present value based off of one r
@@ -89,9 +95,9 @@ pv <- function(data, r){
   
   pv.df <- data.frame()
   
-  for (i in 1:79){
+  for (i in 1:length(data)){ # r starts index at 1
   
-     pv <- data[i] / (1 + r) ^ i
+     pv <- data[i] / (1 + r) ^ (i - 1) # making i = 0 for the first iteration
      pv.df <- rbind(pv.df, pv)
      col_sum <- colSums(pv.df)
      
@@ -107,29 +113,68 @@ by_r <- function(data, r){
   df <- data.frame()
   
   for(i in 1:length(r)){
+    
     pv_r <- pv(data, r[i])
     df <- rbind(df, pv_r)
+    
   }
   
   final.df <- cbind(r, df)
-  
   return(final.df)
+  
 }
 
 rseq <- seq(0.02, 0.03, by = 0.001) 
 r.df <- by_r(warming_predict$norm_damage_wp, rseq) 
 colnames(r.df) <- c("discount_rate", "SCC")
 
-SCC <- ggplot(r.df) +
+ggplot(r.df) +
   geom_line(aes(x = discount_rate, y = SCC)) +
-  labs(y = "Social Cost of Carbon ($/ton)", x= "Discount Rate") +
+  geom_point(aes(x = 0.021, y = r.df$SCC[2]), color = 'purple') +
+  geom_segment(aes(x = 0.021, y = 30000, xend = 0.021, yend = r.df$SCC[2]), linetype = 'dashed', color = 'purple') +
+  geom_label(aes(0.0217, 40000, label = 'r = 0.021')) +
+  labs(y = "Social Cost of Carbon ($/ton)", x = "Discount Rate") +
   theme_minimal()
-
-SCC
 ```
 
+**Figure 3:** Social Cost of Carbon as a function of the discount rate. The optimal discount from the Ramsey Rule is shown with the purple dashed line. 
 
-## 4
-r = ρ + ηg
-r = 0.001 + 2(0.01)= 2.1%
+## Question 4
+
+The Ramsey Rule is defined as the following:
+
+$$ r = \rho + \eta g $$
+The optimal discount rate given $\rho$ = 0.001, $\eta$ = 2, and g = 0.01 is:
+
+$$ r = 0.001 + 2(0.01) $$
+
+$$ \boxed{r = 0.021}$$
+
+## Question 5
+
+Policy A: Warming will occur at baseline (p = 0.5) or 1.5 * baseline (p = 0.5)
+
+Policy B: warming will occur at baseline until 2050 and stay that way forever (1.29°C).
+
+r = 0.02 and society is risk neutral
+
+```{r}
+policy <- warming %>% 
+  mutate(a_1 = predict(damages.qm, list(warming = warming_baseline, warming2 = warming_baseline ^ 2)), # Policy A baseline
+         a_2 = predict(damages.qm, list(warming = 1.5 * warming_baseline, warming2 = (1.5 * warming_baseline) ^ 2)), # 1.5 * policy A
+         expected_a = 0.5 * a_1 + 0.5 * a_2, # E[A]
+         b_warming = ifelse(warming_baseline > 1.29, 1.29, warming_baseline), # modifies warming so it levels off after 1.29 C
+         expected_b = predict(damages.qm, list(warming = b_warming, warming2 = b_warming ^ 2))) # E[B]
+
+pv_a <- pv(policy$expected_a, 0.02) %>% 
+  rbind(pv_b <- pv(policy$expected_b, 0.02))
+```
+
+The expected present value of Policy A is $`r pv_a[1]`.
+
+The expected present value of Policy B is $`r pv_a[2]`.
+
+```{r}
+
+```
 
