@@ -56,26 +56,31 @@ warming_predict <- warming %>%
 
 p1 <- ggplot(warming_predict) +
   geom_line(aes(x = year, y = damage_np)) +
+  geom_text(aes(2035, 1.8e14, label = 'No Pulse')) +
+  labs(y = 'environmental damages ($)') +
   theme_minimal()
 
 p2 <- ggplot(warming_predict) +
   geom_line(aes(x = year, y = damage_wp)) +
+    geom_text(aes(2035, 1.8e14, label = 'Pulse')) +
+  labs(y = 'environmental damages ($)') +
   theme_minimal()
 
 p3 <- ggplot(warming_predict) +
   geom_line(aes(x = year, y = damages_diff)) +
+    labs(y = 'environmental damage \n difference ($)') +
   theme_minimal()
 
 p4 <- ggplot(warming_predict) +
   geom_line(aes(x = year, y = new_difference_norm)) +
+  labs(y = 'environmenta damage \n difference ($/ton)') +
   theme_minimal()
 
 (p1 | p2) / (p3 | p4)
 
-
-
 ```
 
+**Figure 2:** Plots of damages from no pulse (top-left), with the 35b ton pulse (top-right), the differences in damages (with pulse - no pulse) (bottom-left), and the normalized differences in damages per ton of carbon (bottom-right.)
 ## 3
 
 ```{r}
@@ -112,7 +117,7 @@ by_r <- function(data, r){
 }
 
 rseq <- seq(0.002, 0.003, by = 0.00001) 
-r.df <- by_r(warming_predict$norm_damage_wp, rseq)
+r.df <- by_r(warming_predict$norm_damage_wp, rseq) 
 ```
 
 
