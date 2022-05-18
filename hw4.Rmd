@@ -116,8 +116,16 @@ by_r <- function(data, r){
   return(final.df)
 }
 
-rseq <- seq(0.002, 0.003, by = 0.00001) 
+rseq <- seq(0.02, 0.03, by = 0.001) 
 r.df <- by_r(warming_predict$norm_damage_wp, rseq) 
+colnames(r.df) <- c("discount_rate", "SCC")
+
+SCC <- ggplot(r.df) +
+  geom_line(aes(x = discount_rate, y = SCC)) +
+  labs(y = "Social Cost of Carbon ($/ton)", x= "Discount Rate") +
+  theme_minimal()
+
+SCC
 ```
 
 
