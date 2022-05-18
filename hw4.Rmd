@@ -73,3 +73,18 @@ p4 <- ggplot(warming_predict) +
 (p1 | p2) / (p3 | p4)
 ```
 
+## 3
+
+```{r}
+discount2 <- damages %>% 
+  mean(damages*.02)
+
+discount3 <- damages %>% 
+  mutate(damages*.03)
+```
+
+
+## 4
+r = ρ + ηg
+r = 0.001 + 2(0.01)= 2.1%
+
