@@ -17,3 +17,28 @@ damages <- read_csv(here('data/damages.csv'))
 warming <- read_csv(here('data/warming.csv'))
 ```
 
+## 1
+
+```{r}
+# create quadratic model
+damages$warming2 <- damages$warming ^ 2
+damages.qm <- lm(damages ~ 0 + warming + warming2, data = damages)
+
+warming_seq <- seq(0, max(damages$warming), by = 0.01)
+fit <- predict(damages.qm, list(warming = warming_seq, warming2 = warming_seq ^ 2)) %>% 
+  cbind(warming_seq) %>% 
+  as.data.frame()
+
+ggplot() +
+  geom_point(data = damages, aes(x = warming, y = damages), color = 'grey') +
+  geom_line(data = fit, aes(x = warming_seq, y = .), color = 'red') +
+  labs(x = expression('warming (°C)'),
+       y = 'Total climate damage ($)') +
+  theme_minimal()
+```
+
+**Figure 1:** Fitted quadratic regression model to environmental damages from warming.
+
+The quadratic regression model modeling environmental damages as a function of global warming is given as:
+
+$$ \hat D = 1.941 \times 10^{13} T ^ 2 - 1.060 \times 10^{12} T $$
