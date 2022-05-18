@@ -10,6 +10,7 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 
 library(tidyverse)
 library(here)
+library(patchwork)
 ```
 
 ```{r}
@@ -42,3 +43,37 @@ ggplot() +
 The quadratic regression model modeling environmental damages as a function of global warming is given as:
 
 $$ \hat D = 1.941 \times 10^{13} T ^ 2 - 1.060 \times 10^{12} T $$
+
+## 2
+
+```{r}
+warming_predict <- warming %>% 
+  mutate(damage_np = predict(damages.qm, list(warming = warming_baseline, warming2 = warming_baseline^2)), # damage without pulse
+         damage_wp = predict(damages.qm, list(warming = warming_pulse, warming2 = warming_pulse^2)), # damage with pulse
+         damages_diff = damage_wp - damage_np, # differences in damage
+         wb_normalized = warming_baseline / warming_pulse[1], # normalize warming baseline with warming pulse value
+         wp_normalized = warming_pulse / warming_pulse[1], # normalize pulse with first pulse value
+         wbn_damage = predict(damages.qm, list(warming = wb_normalized, warming2 = wb_normalized^2)), # predict baseline 
+         wpn_damage = predict(damages.qm, list(warming = wp_normalized, warming2 = wp_normalized^2)), # predict pulse
+         difference_norm = wpn_damage - wbn_damage) # normalized difference
+
+p1 <- ggplot(warming_predict) +
+  geom_line(aes(x = year, y = damage_np)) +
+  theme_minimal()
+
+p2 <- ggplot(warming_predict) +
+  geom_line(aes(x = year, y = damage_wp)) +
+  theme_minimal()
+
+p3 <- ggplot(warming_predict) +
+  geom_line(aes(x = year, y = damages_diff)) +
+  theme_minimal()
+
+p4 <- ggplot(warming_predict) +
+  geom_line(aes(x = year, y = difference_norm)) +
+  theme_minimal()
+
+
+(p1 | p2) / (p3 | p4)
+```
+
