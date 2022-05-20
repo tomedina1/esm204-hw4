@@ -167,7 +167,7 @@ policy <- warming %>%
          expected_b = predict(damages.qm, list(warming = b_warming, warming2 = b_warming ^ 2))) # E[B]
 
 pv_a <- pv(policy$expected_a, 0.02) %>% 
-  rbind(pv_b <- pv(policy$expected_b, 0.02))
+  rbind(pv_b <- pv(policy$expected_b, 0.02)) 
 ```
 
 The expected present value of Policy A is $`r pv_a[1]`.
@@ -175,6 +175,22 @@ The expected present value of Policy A is $`r pv_a[1]`.
 The expected present value of Policy B is $`r pv_a[2]`.
 
 ```{r}
+x <- seq(0, 5e15, by = 1e12)
 
+costs <- data.frame(x = x) %>% 
+  mutate(a = pv_a[1],
+         b = pv_a[2] + x)
+
+b.lm <- lm(b ~ x, data = costs)
+
+eq <- (costs$a[1] - b.lm$coefficients[1]) / b.lm$coefficients[2]
+
+ggplot(costs) +
+  geom_line(aes(x = x, y = a)) +
+  geom_line(aes(x = x, y = b)) +
+  geom_segment(aes(x = eq, y = 0, xend = eq, yend = 6e15), linetype = 'dashed') +
+  labs(x = 'Additional Costs ($)',
+       y = 'Total Present Value ($)') +
+  theme_minimal()
 ```
 
