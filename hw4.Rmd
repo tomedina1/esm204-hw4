@@ -2,7 +2,11 @@
 title: "ESM 204 Hw 4"
 author: "Taylor Medina, Matt McCafferty"
 date: '2022-05-16'
-output: html_document
+output:
+  html_document: 
+    code_folding: hide
+    toc: yes
+    theme: paper
 ---
 
 ```{r setup, include = TRUE, warning = FALSE, message = FALSE}
@@ -193,4 +197,12 @@ ggplot(costs) +
        y = 'Total Present Value ($)') +
   theme_minimal()
 ```
+
+## Question 6
+```{r}
+
+```
+
+If society is risk-averse, then they will prefer the expected value with the most certainty. This would be Policy B since there is less uncertainty with that policy than policy A.
+
 
