@@ -90,8 +90,7 @@ p4 <- ggplot(warming_predict) +
 
 The present discounted value formula is given as the following:
 
-$$ PV = \sum_{i = 0}^{78}{\frac{D_i}{(1+r)^i}}$$
-This takes into account that 2022 is considered year 0 (i = 0) and 2100 is the final value (i = 78). $D_i$ is the damage associated with the year.
+$$ PV = \sum_{i = 0}^{78}{\frac{D_i}{(1+r)^i}}$$ This takes into account that 2022 is considered year 0 (i = 0) and 2100 is the final value (i = 78). $D_i$ is the damage associated with the year.
 
 ```{r}
 # function to calculate present value based off of one r
@@ -141,14 +140,13 @@ ggplot(r.df) +
   theme_minimal()
 ```
 
-**Figure 3:** Social Cost of Carbon as a function of the discount rate. The optimal discount from the Ramsey Rule is shown with the purple dashed line. 
+**Figure 3:** Social Cost of Carbon as a function of the discount rate. The optimal discount from the Ramsey Rule is shown with the purple dashed line.
 
 ## Question 4
 
 The Ramsey Rule is defined as the following:
 
-$$ r = \rho + \eta g $$
-The optimal discount rate given $\rho$ = 0.001, $\eta$ = 2, and g = 0.01 is:
+$$ r = \rho + \eta g $$ The optimal discount rate given $\rho$ = 0.001, $\eta$ = 2, and g = 0.01 is:
 
 $$ r = 0.001 + 2(0.01) $$
 
@@ -156,7 +154,7 @@ $$ \boxed{r = 0.021}$$
 
 ## Question 5
 
-Policy A: Warming will occur at baseline (p = 0.5) or 1.5 * baseline (p = 0.5)
+Policy A: Warming will occur at baseline (p = 0.5) or 1.5 \* baseline (p = 0.5)
 
 Policy B: warming will occur at baseline until 2050 and stay that way forever (1.29°C).
 
@@ -174,9 +172,9 @@ pv_a <- pv(policy$expected_a, 0.02) %>%
   rbind(pv_b <- pv(policy$expected_b, 0.02)) 
 ```
 
-The expected present value of Policy A is $`r pv_a[1]`.
+The expected present value of Policy A is \$ $3.02 \times 10^{15}$.
 
-The expected present value of Policy B is $`r pv_a[2]`.
+The expected present value of Policy B is \$ $7.87 x 10^{14}$.
 
 ```{r}
 x <- seq(0, 5e15, by = 1e12)
@@ -202,13 +200,8 @@ ggplot(costs) +
 
 **Figure 4:** Plot of Total Present Value vs. Additional Costs for Policy A (red line) and Policy B (black line). The purple vertical dashed line is the boundary where Policy B costs more than policy A.
 
-When additional costs for Policy B < `r eq`, the Policy B is cheaper. When the additional costs > `r eq`, then policy A is cheaper.
+When additional costs for Policy B <  \$ $2.24 \times 10^{15}$, then Policy B is cheaper and it would be cheaper. When the additional costs > \$ $2.24 \times 10^{15}$, then policy A is cheaper and it would be chosen. 
 
 ## Question 6
-```{r}
 
-```
-
-If society is risk-averse, then they will prefer the expected value with the most certainty. This would be Policy B since there is less uncertainty with that policy than policy A.
-
-
+If society is risk-averse, then they will prefer the expected value with the most certainty. This would be Policy B since there is less uncertainty with that policy than policy A. 
