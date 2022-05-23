@@ -190,13 +190,19 @@ b.lm <- lm(b ~ x, data = costs)
 eq <- (costs$a[1] - b.lm$coefficients[1]) / b.lm$coefficients[2]
 
 ggplot(costs) +
-  geom_line(aes(x = x, y = a)) +
+  geom_line(aes(x = x, y = a), color = 'red') +
   geom_line(aes(x = x, y = b)) +
-  geom_segment(aes(x = eq, y = 0, xend = eq, yend = 6e15), linetype = 'dashed') +
+  geom_segment(aes(x = eq, y = 0, xend = eq, yend = 6e15), linetype = 'dashed', color = 'purple') +
+  geom_label(aes(1e15, 6e15, label = 'Policy B')) +
+  geom_label(aes(3.5e15, 6e15, label = 'Policy A')) +
   labs(x = 'Additional Costs ($)',
        y = 'Total Present Value ($)') +
   theme_minimal()
 ```
+
+**Figure 4:** Plot of Total Present Value vs. Additional Costs for Policy A (red line) and Policy B (black line). The purple vertical dashed line is the boundary where Policy B costs more than policy A.
+
+When additional costs for Policy B < `r eq`, the Policy B is cheaper. When the additional costs > `r eq`, then policy A is cheaper.
 
 ## Question 6
 ```{r}
