@@ -200,7 +200,7 @@ ggplot(costs) +
 
 **Figure 4:** Plot of Total Present Value vs. Additional Costs for Policy A (red line) and Policy B (black line). The purple vertical dashed line is the boundary where Policy B costs more than policy A.
 
-When additional costs for Policy B <  \$ $2.24 \times 10^{15}$, then Policy B is cheaper and it would be cheaper. When the additional costs > \$ $2.24 \times 10^{15}$, then policy A is cheaper and it would be chosen. 
+When additional costs for Policy B <  \$ $2.24 \times 10^{15}$, then Policy B is cheaper and it would be chosen. When the additional costs > \$ $2.24 \times 10^{15}$, then policy A is cheaper and it would be chosen. 
 
 ## Question 6
 
